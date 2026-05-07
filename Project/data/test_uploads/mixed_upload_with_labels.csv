@@ -1,0 +1,16 @@
+employee_department,employee_campus,employee_position,employee_seniority_years,is_contractor,employee_classification,has_foreign_citizenship,has_criminal_record,has_medical_history,employee_origin_country,total_printed_pages,num_printed_pages_off_hours,total_files_burned,burned_from_other,is_abroad,trip_day_number,hostility_country_level,num_entries,num_unique_campus,late_exit_flag,entry_during_weekend,is_malicious
+Engineering Department,Campus B,Systems Engineer,26,0,2,0,0,1,Russia,91,34,0,0,0,0.0,0,0,0,0,0,1
+Security and Information Security,Campus C,Information Security Investigator,2,0,4,0,0,0,Israel,7,0,0,0,0,0.0,0,1,1,0,0,1
+Marketing and Business Development,Campus B,Marketing Manager,10,1,2,0,0,0,Israel,9,3,0,0,0,0.0,0,0,0,0,0,0
+Engineering Department,Campus C,Design Engineer,21,0,2,1,0,0,USA,0,0,87,1,0,0.0,0,1,1,0,0,1
+Operations and Manufacturing,Campus C,Operations Manager,7,0,2,0,0,1,Ethiopia,0,0,0,0,1,9.0,0,0,0,0,0,0
+Finance,Campus C,Secretary,3,0,2,1,0,0,Ethiopia,72,44,0,0,0,0.0,0,1,1,0,0,1
+R&D Department,Campus B,Systems Engineer,6,0,3,0,0,0,Ukraine,0,0,36,0,0,0.0,0,2,1,0,1,0
+Operations and Manufacturing,Campus A,Secretary,1,0,2,0,0,0,Israel,0,0,0,0,1,13.0,0,0,0,0,0,0
+R&D Department,Campus B,Head of R&D,15,0,2,1,0,1,Ethiopia,0,0,73,0,1,6.0,0,0,0,0,0,1
+R&D Department,Campus C,Algorithm Engineer,17,0,2,0,0,1,Russia,14,0,0,0,0,0.0,0,0,0,0,0,0
+Project Management,Campus B,Secretary,9,0,3,0,0,0,Israel,8,2,0,0,0,0.0,0,1,1,0,0,0
+Operations and Manufacturing,Campus A,Secretary,6,0,1,0,0,1,UK,344,0,0,0,0,0.0,0,1,1,0,1,1
+R&D Department,Campus B,Head of R&D,15,0,2,1,0,1,Ethiopia,0,0,48,1,0,0.0,0,1,1,0,0,1
+Marketing and Business Development,Campus B,Account Manager,5,0,3,0,0,0,Israel,30,0,9,0,0,0.0,0,2,1,0,0,0
+Project Management,Campus C,Project Engineer,0,0,1,0,0,0,Israel,2,0,0,0,0,0.0,0,2,1,0,0,0
