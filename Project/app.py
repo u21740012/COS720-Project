@@ -15,7 +15,7 @@ st.set_page_config(
 MODEL_PATH = "models/trained_model.pkl"
 LOG_PATH = "logs/predictions.csv"
 
-# ---------------- CSS ----------------
+# CSS 
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -229,7 +229,7 @@ h1, h2, h3 {
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- Header ----------------
+# Header 
 st.markdown("""
 <div class="app-header">
     <div class="header-kicker">AI-Assisted Security Analytics</div>
@@ -240,65 +240,14 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ---------------- Sample profiles ----------------
-sample_profiles = {
-    "None": None,
-    "Sample Normal": {
-        "employee_department": "IT",
-        "employee_campus": "Main",
-        "employee_position": "Analyst",
-        "employee_seniority_years": 3,
-        "is_contractor": 0,
-        "employee_classification": 1,
-        "has_foreign_citizenship": 0,
-        "has_criminal_record": 0,
-        "has_medical_history": 0,
-        "employee_origin_country": "South Africa",
-        "total_printed_pages": 10,
-        "num_printed_pages_off_hours": 0,
-        "total_files_burned": 0,
-        "burned_from_other": 0,
-        "is_abroad": 0,
-        "trip_day_number": 0,
-        "hostility_country_level": 0,
-        "num_entries": 2,
-        "num_unique_campus": 1,
-        "late_exit_flag": 0,
-        "entry_during_weekend": 0
-    },
-    "Sample Suspicious": {
-        "employee_department": "Finance",
-        "employee_campus": "Main",
-        "employee_position": "Manager",
-        "employee_seniority_years": 8,
-        "is_contractor": 0,
-        "employee_classification": 2,
-        "has_foreign_citizenship": 1,
-        "has_criminal_record": 0,
-        "has_medical_history": 0,
-        "employee_origin_country": "South Africa",
-        "total_printed_pages": 120,
-        "num_printed_pages_off_hours": 25,
-        "total_files_burned": 10,
-        "burned_from_other": 1,
-        "is_abroad": 1,
-        "trip_day_number": 4,
-        "hostility_country_level": 4,
-        "num_entries": 14,
-        "num_unique_campus": 3,
-        "late_exit_flag": 1,
-        "entry_during_weekend": 1
-    }
-}
-
-# ---------------- Model check ----------------
+# Model check
 if not os.path.exists(MODEL_PATH):
     st.error("Trained model not found. Please run train.py first.")
     st.stop()
 
 predictor = ThreatPredictor(MODEL_PATH)
 
-# ---------------- Session state ----------------
+# Session state
 if "analysis_done" not in st.session_state:
     st.session_state.analysis_done = False
 
@@ -311,54 +260,75 @@ if "input_df" not in st.session_state:
 if "probabilities" not in st.session_state:
     st.session_state.probabilities = None
 
-# ---------------- Sidebar menu ----------------
+# Sidebar menu
 with st.sidebar:
-    st.markdown('<div class="sidebar-title">Navigation</div>', unsafe_allow_html=True)
+
+    st.markdown(
+        '<div class="sidebar-title">Navigation</div>',
+        unsafe_allow_html=True
+    )
 
     menu = st.radio(
         "Menu",
-        ["Run Analysis", "Prediction Log", "Model Info"],
+        [
+            "Run Analysis",
+            "Prediction Log",
+            "Model Info"
+        ],
         label_visibility="collapsed"
     )
 
     st.markdown("---")
 
-    st.markdown('<div class="sidebar-title">Input Source</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="sidebar-title">Behaviour Upload</div>',
+        unsafe_allow_html=True
+    )
 
-    input_mode = st.radio(
-        "Choose input method",
-        ["Upload CSV", "Sample Profile"]
+    st.markdown(
+        """
+        <div class="sidebar-box">
+        Upload behavioural activity records for analysis.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    uploaded_file = st.file_uploader(
+        "Upload CSV File",
+        type=["csv"]
     )
 
     input_df = None
 
-    if input_mode == "Upload CSV":
-        uploaded_file = st.file_uploader("Upload behavioural CSV", type=["csv"])
-        if uploaded_file is not None:
-            input_df = pd.read_csv(uploaded_file)
-            st.success("CSV loaded.")
-    else:
-        selected_sample = st.selectbox(
-            "Choose sample profile",
-            list(sample_profiles.keys())
+    if uploaded_file is not None:
+        input_df = pd.read_csv(uploaded_file)
+        st.success(
+            f"{len(input_df)} records loaded successfully."
         )
-        if selected_sample != "None":
-            input_df = pd.DataFrame([sample_profiles[selected_sample]])
-            st.success("Sample profile loaded.")
 
     st.markdown("---")
 
-    run_analysis = st.button("Run Analysis")
+    run_analysis = st.button(
+        "Run Analysis"
+    )
 
     if run_analysis and input_df is not None:
+
         predictions, probabilities = predictor.predict(input_df)
 
         result_df = input_df.copy()
+
         result_df["prediction"] = predictions
-        result_df["prediction_label"] = result_df["prediction"].map({
-            0: "Normal / Benign",
-            1: "Malicious Insider"
-        })
+
+        result_df["prediction_label"] = (
+            result_df["prediction"]
+            .map({
+                0: "Normal",
+                1: "Malicious Insider"
+            })
+        )
+
         result_df["confidence"] = probabilities.max(axis=1)
 
         st.session_state.analysis_done = True
@@ -366,10 +336,13 @@ with st.sidebar:
         st.session_state.result_df = result_df
         st.session_state.probabilities = probabilities
 
-# ---------------- Menu: Model Info ----------------
+    elif run_analysis and input_df is None:
+        st.warning("Please upload a CSV file first.")
+
+# Menu: Model Info 
 if menu == "Model Info":
     st.markdown('<div class="card"><div class="card-title">Model Information</div>', unsafe_allow_html=True)
-    st.write("Final selected model: **Random Forest Classifier**")
+    st.write("Final selected model: Random Forest Classifier")
     st.write("Reason: best balance between precision, recall, and F1-score in model comparison.")
     st.write("The model is trained on behavioural employee activity features and outputs a binary classification.")
     st.markdown('</div>', unsafe_allow_html=True)
@@ -380,7 +353,7 @@ if menu == "Model Info":
         st.dataframe(importance_df.head(10), use_container_width=True, hide_index=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-# ---------------- Menu: Prediction Log ----------------
+# Menu: Prediction Log 
 elif menu == "Prediction Log":
     st.markdown('<div class="card"><div class="card-title">Prediction Log</div>', unsafe_allow_html=True)
 
@@ -392,9 +365,9 @@ elif menu == "Prediction Log":
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ---------------- Menu: Run Analysis ----------------
+# Menu: Run Analysis
 else:
-    if input_df is None:
+    if st.session_state.input_df is None:
         st.markdown("""
         <div class="card">
             <div class="card-title">Awaiting Input</div>
@@ -423,7 +396,7 @@ else:
             "All Predictions"
         ])
 
-        # ---------------- Batch Summary ----------------
+        # Batch Summary
         with tab1:
             overall_malicious = malicious_count > 0
             verdict_class = "malicious" if overall_malicious else "normal"
@@ -493,7 +466,7 @@ else:
             )
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # ---------------- Selected Record Analysis ----------------
+        # Selected Record Analysis
         with tab2:
             row_options = [
                 f"Row {i} — {result_df.iloc[i]['prediction_label']} — {result_df.iloc[i]['confidence'] * 100:.2f}%"
@@ -514,7 +487,7 @@ else:
 
             is_malicious = selected_prediction == 1
             verdict_class = "malicious" if is_malicious else "normal"
-            label = "Malicious Insider Activity" if is_malicious else "Normal / Benign Behaviour"
+            label = "Malicious Insider Activity" if is_malicious else "Normal Behaviour"
 
             left, right = st.columns([2, 1])
 
@@ -538,7 +511,6 @@ else:
             off_hours = int(selected_row.get("num_printed_pages_off_hours", 0))
             burned = int(selected_row.get("total_files_burned", 0))
             entries = int(selected_row.get("num_entries", 0))
-
             c1, c2, c3, c4 = st.columns(4)
 
             with c1:
@@ -559,7 +531,6 @@ else:
             st.markdown('<div class="card"><div class="card-title">Selected Record Data</div>', unsafe_allow_html=True)
             st.dataframe(pd.DataFrame([selected_row]), use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
-
             prediction_label = "Malicious" if selected_prediction == 1 else "Normal"
 
             if st.button("Save Selected Record to Prediction Log", use_container_width=True):
@@ -572,12 +543,11 @@ else:
                 )
                 st.success("Selected record saved to prediction log.")
 
-        # ---------------- All Predictions ----------------
+        # All Predictions 
         with tab3:
             st.markdown('<div class="card"><div class="card-title">All Prediction Results</div>', unsafe_allow_html=True)
             st.dataframe(result_df, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
-
             importance_df = predictor.get_feature_importance()
             if importance_df is not None:
                 st.markdown('<div class="card"><div class="card-title">Top Feature Importance</div>', unsafe_allow_html=True)

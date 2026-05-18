@@ -30,3 +30,4 @@ timestamp,prediction,confidence,explanation,employee_department,employee_campus,
 2026-05-07T00:09:55.315223,Normal,0.995,This activity was flagged mainly because of activity while abroad.,Engineering Department,Campus C,Design Engineer,11,1,3,1,0,0,Yemen,0,0,0,0,1,2.0,0,0,0,0,0
 2026-05-07T00:44:02.892550,Normal,0.995,This activity was flagged mainly because of activity while abroad.,Engineering Department,Campus C,Design Engineer,11,1,3,1,0,0,Yemen,0,0,0,0,1,2.0,0,0,0,0,0
 2026-05-07T00:44:40.592194,Normal,0.99,This activity was flagged mainly because of file burning activity.,R&D Department,Campus B,Development Engineer (Hardware / Software / Mechanical),7,0,3,0,0,1,Israel,18,0,3,0,0,0.0,0,0,0,0,0
+2026-05-18T19:33:47.972757,Normal,0.9901,"This activity was flagged mainly because of weekend access activity, file burning activity.",R&D Department,Campus B,Systems Engineer,6,0,3,0,0,0,Ukraine,0,0,36,0,0,0.0,0,2,1,0,1
