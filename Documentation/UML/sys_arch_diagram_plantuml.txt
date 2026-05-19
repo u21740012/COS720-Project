@@ -1,0 +1,73 @@
+@startuml
+title System Architecture Diagram - Insider Threat Detection System
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+top to bottom direction
+
+actor User
+
+rectangle "Presentation Layer" as PL {
+    component "User Interface" as UI
+}
+
+rectangle "Application Layer" as AL {
+    component "Prediction Controller" as Controller
+}
+
+rectangle "Service Layer" as SL {
+    component "Prediction Service" as Predictor
+    component "Explanation Service" as Explain
+    component "Logging Service" as Logger
+}
+
+rectangle "Processing Layer" as ML {
+    component "Data Preprocessing" as Preprocess
+    component "Classification Model" as Model
+}
+
+rectangle "Data Layer" as DL {
+    database "Input Data" as Uploads
+    database "Prediction Logs" as Logs
+    database "Training Dataset" as TrainData
+    database "Testing Dataset" as TestData
+}
+
+' Force stacked layers
+PL -[hidden]down-> AL
+AL -[hidden]down-> SL
+SL -[hidden]down-> ML
+ML -[hidden]down-> DL
+
+' Keep services on same horizontal level
+Predictor -[hidden]right-> Explain
+Explain -[hidden]right-> Logger
+
+' Keep data stores on same horizontal level
+Uploads -[hidden]right-> Logs
+Logs -[hidden]right-> TrainData
+TrainData -[hidden]right-> TestData
+
+' Main flow
+User --> UI
+UI --> Controller
+Controller --> Predictor
+Predictor --> Preprocess
+Preprocess --> Model
+Model --> Predictor
+Predictor --> Controller
+Controller --> UI
+
+' Supporting flows
+Controller --> Explain
+Controller --> Logger
+Logger --> Logs
+
+Uploads --> UI
+TrainData --> Model
+TestData --> Model
+
+@enduml

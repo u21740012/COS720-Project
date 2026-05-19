@@ -1,0 +1,33 @@
+@startuml
+title Activity Diagram - Insider Threat Detection Prototype
+
+start
+
+:Open system;
+
+:Select input method;
+
+if (Input method?) then (Upload CSV)
+    :Upload behavioural CSV;
+else (Sample profile)
+    :Select sample employee profile;
+endif
+
+:Load input data;
+
+if (Input data valid?) then (Yes)
+    :Preprocess input data;
+    :Align features with trained model;
+    :Run classification model;
+    :Generate prediction;
+    :Calculate confidence score;
+    :Generate human-readable explanation;
+    :Log prediction result;
+    :Display classification, confidence,\nexplanation and feature importance;
+else (No)
+    :Display validation error;
+endif
+
+stop
+
+@enduml
